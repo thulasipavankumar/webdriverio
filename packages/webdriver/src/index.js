@@ -42,6 +42,7 @@ export default class WebDriver {
             '/session',
             {
                 capabilities: w3cCaps, // W3C compliant
+                pavan:"",//custom inserted
                 desiredCapabilities: jsonwpCaps // JSONWP compliant
             }
         )
