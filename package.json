@@ -62,7 +62,7 @@
     "husky": "^2.3.0",
     "inquirer": "^6.2.2",
     "jest": "^24.5.0",
-    "lerna": "^3.13.1",
+    "lerna": "^3.14.1",
     "lerna-changelog": "^0.8.2",
     "markdox": "^0.1.10",
     "mime-types": "^2.1.22",
@@ -107,5 +107,8 @@
       "packages/webdriverio/build",
       "packages/webdriver/build"
     ]
+  },
+  "dependencies": {
+    "wdio": "^3.0.3"
   }
 }
