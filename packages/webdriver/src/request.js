@@ -16,11 +16,44 @@ const agents = {
     http: new http.Agent({ keepAlive: true }),
     https: new https.Agent({ keepAlive: true })
 }
+const w3cCompatableCapabilites = ["browserName","browserVersion","platformName","acceptInsecureCerts","pageLoadStrategy",
+                                  "proxy","setWindowRect","timeouts","unhandledPromptBehavior"];
+const saveDesiredCapabilites=(arg)=>{
+ let newObj = JSON.parse(JSON.stringify(arg.desiredCapabilities));
+// console.log("saved:",newObj);
+ return function(){return newObj};
+}
+const removeCustomCapabilites = (args,val) =>{
+    try{
+    if(args.capabilities === undefined || args.capabilities.alwaysMatch === undefined){
+       // console.log("no need to modify");
+        return args;
+    }
+    //console.log("pavan\n\n\nProvided",args);
+    let curry ;
+    curry = saveDesiredCapabilites(args);
+    Object.keys(args.capabilities.alwaysMatch).map(key=>{
+        if(!w3cCompatableCapabilites.includes(key)){       
+            //getting deleted in desiredCapabilites as well f*cked up situtatin have to investigate
+            // args.alwaysMatch[key]; 
+         //  console.log("deleting "+key)
+          delete args.capabilities.alwaysMatch[key]
+           //console.log("pavan \n\n\n undefining "+key)
+        }
+     });
+     args.desiredCapabilities = curry();
+    }catch(err){
+        //do something
+    }
+   // console.log("pavan returning\n\n",args);
+   return args; 
+}
+          
 
 export default class WebDriverRequest extends EventEmitter {
     constructor (method, endpoint, body) {
         super()
-        this.body = body
+        this.body = removeCustomCapabilites(body)    
         this.method = method
         this.endpoint = endpoint
         this.requiresSessionId = this.endpoint.match(/:sessionId/)

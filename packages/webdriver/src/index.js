@@ -20,8 +20,7 @@ export default class WebDriver {
         if (!options.logLevels || !options.logLevels['webdriver']) {
             logger.setLevel('webdriver', params.logLevel)
         }
-        const w3cCompatableCapabilites = ["browserName","browserVersion","platformName","acceptInsecureCerts","pageLoadStrategy",
-                                    "proxy","setWindowRect","timeouts","unhandledPromptBehavior"];
+
         /**
          * the user could have passed in either w3c style or jsonwp style caps
          * and we want to pass both styles to the server, which means we need
@@ -38,24 +37,11 @@ export default class WebDriver {
              */
             : [{ alwaysMatch: params.capabilities, firstMatch: [{}] }, params.capabilities]
 
-        const removeCustomCapabilites = (args,val) =>{
-            Object.keys(args.alwaysMatch).map(key=>{
-                if(!w3cCompatableCapabilites.includes(key)){
-                    console.log("deleting "+key)
-                    //getting deleted in desiredCapabilites as well f*cked up situtatin have to investigate
-                   // delete args.alwaysMatch[key]; 
-                   args.alwaysMatch[key]=undefined;
-                }
-                               
-            });
-            console.log(args);
-           return args; 
-        }
         const sessionRequest = new WebDriverRequest(
             'POST',
             '/session',
             {
-                capabilities: removeCustomCapabilites(w3cCaps), // W3C compliant
+                capabilities: w3cCaps, // W3C compliant
                 desiredCapabilities: jsonwpCaps // JSONWP compliant
             }
         )
